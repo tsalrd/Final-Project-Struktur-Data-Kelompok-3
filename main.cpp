@@ -311,7 +311,9 @@ int main() {
         printf("6. Proses Antrian\n");
         printf("7. Tampilkan Kursi\n");
         printf("8. Hapus Penonton\n");
-        printf("9. Keluar\n");
+        printf("9. Tampilkan Riwayat\n");
+        printf("10. Simpan Riwayat Ke File\n");
+        printf("11. Keluar\n");
         printf("Pilih: ");
         scanf("%d", &choice);
         getchar();
@@ -367,6 +369,12 @@ int main() {
                 removeSeat(seats);
                 break;
             case 9:
+                displayTickets(ticketHead);
+                break;
+            case 10:
+                saveHistoryToFile(ticketHead, "riwayat_transaksi.txt");
+                break;
+            case 11:
                 resetQueue(&front, &rear, &queueCount);
                 printf("Keluar dari program.\n");
                 exit(0);
