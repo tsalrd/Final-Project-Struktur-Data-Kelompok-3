@@ -303,17 +303,21 @@ int main() {
 
     while (1) {
         clearscreen();
-        printf("\n1. Tambah Film\n");
-        printf("2. Tampilkan Film dalam Stack\n");
-        printf("3. Putar Film\n");
-        printf("4. Tambah Antrian\n");
-        printf("5. Tampilkan Antrian\n");
-        printf("6. Proses Antrian\n");
-        printf("7. Tampilkan Kursi\n");
-        printf("8. Hapus Penonton\n");
-        printf("9. Tampilkan Riwayat\n");
-        printf("10. Simpan Riwayat Ke File\n");
-        printf("11. Keluar\n");
+        printf("\n|============= MENU ==============| \n");
+        printf("| 1. Tambah Film                  |\n");
+        printf("| 2. Tampilkan Film dalam Stack   |\n");
+        printf("| 3. Putar Film                   |\n");
+        printf("| 4. Tambah Antrian               |\n");
+        printf("| 5. Tampilkan Antrian            |\n");
+        printf("| 6. Proses Antrian               |\n");
+        printf("| 7. Tampilkan Kursi              |\n");
+        printf("| 8. Hapus Penonton               |\n");
+        printf("| 9. Tampilkan Riwayat            |\n");
+        printf("| 10. Simpan Riwayat ke File      |\n");
+        printf("| 11. Baca Riwayat dari File      |\n");
+        printf("| 12. Tampilkan Riwayat dari File |\n");
+        printf("| 13. Keluar                      |\n");
+        printf("|---------------------------------|\n");
         printf("Pilih: ");
         scanf("%d", &choice);
         getchar();
@@ -375,6 +379,12 @@ int main() {
                 saveHistoryToFile(ticketHead, "riwayat_transaksi.txt");
                 break;
             case 11:
+                loadHistoryFromFile(&ticketHead, "riwayat_transaksi.txt");
+                break;
+            case 12:
+                displayHistoryFromFile("riwayat_transaksi.txt");
+                break;
+            case 13:
                 resetQueue(&front, &rear, &queueCount);
                 printf("Keluar dari program.\n");
                 exit(0);
