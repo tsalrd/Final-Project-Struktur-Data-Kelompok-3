@@ -160,9 +160,28 @@ void addTicket(TicketNode** head, char* name, int seatNumber, char* movie) {
     *head = newTicket;
 }
 
+void displayTickets(TicketNode* head) {
+    if (head == NULL) {
+        printf("Riwayat transaksi tiket kosong!\n");
+        return;
+    }
+
+    TicketNode* temp = head;
+    while (temp != NULL) {
+        printf("%s - Kursi %d - Film: %s\n", temp->name, temp->seatNumber, temp->movie);
+        temp = temp->next;
+    }
+}
+
 void initializeSeats(Seat seats[]) {
     for (int i = 0; i < MAX_SEATS; i++) {
         strcpy(seats[i].name, "Belum Terisi");
+    }
+}
+
+void displaySeats(Seat seats[]) {
+    for (int i = 0; i < MAX_SEATS; i++) {
+        printf("%d. %s\n", i + 1, seats[i].name);
     }
 }
 
@@ -189,6 +208,20 @@ int assignSeat(Seat seats[], char* name) {
     }
 }
 
+void removeSeat(Seat seats[]) {
+    int seatNumber;
+    printf("Pilih kursi yang ingin dihapus: ");
+    scanf("%d", &seatNumber);
+
+    if (seatNumber < 1 || seatNumber > MAX_SEATS || strcmp(seats[seatNumber - 1].name, "Belum Terisi") == 0) {
+        printf("Kursi tidak valid atau sudah kosong!\n");
+        return;
+    }
+
+    printf("%s telah keluar dari kursi %d.\n", seats[seatNumber - 1].name, seatNumber);
+    strcpy(seats[seatNumber - 1].name, "Belum Terisi");
+}
+
 void displayQueue(Queue* front) {
     if (front == NULL) {
         printf("Antrian kosong!\n");
@@ -202,6 +235,59 @@ void displayQueue(Queue* front) {
     }
 }
 
+void saveHistoryToFile(TicketNode* head, const char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Gagal membuka file untuk menyimpan riwayat!\n");
+        return;
+    }
+
+    TicketNode* temp = head;
+    while (temp != NULL) {
+        fprintf(file, "%s,%d,%s\n", temp->name, temp->seatNumber, temp->movie);
+        temp = temp->next;
+    }
+
+    fclose(file);
+    printf("Riwayat transaksi berhasil disimpan ke file %s.\n", filename);
+}
+
+void loadHistoryFromFile(TicketNode** head, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Gagal membuka file untuk membaca riwayat!\n");
+        return;
+    }
+
+    char line[100];
+    while (fgets(line, sizeof(line), file)) {
+        char name[50];
+        int seatNumber;
+        char movie[50];
+
+        sscanf(line, "%[^,],%d,%[^\n]", name, &seatNumber, movie);
+        addTicket(head, name, seatNumber, movie);
+    }
+
+    fclose(file);
+    printf("Riwayat transaksi berhasil dimuat dari file %s.\n", filename);
+}
+
+void displayHistoryFromFile(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File riwayat transaksi tidak ditemukan!\n");
+        return;
+    }
+
+    char line[100];
+    printf("Riwayat Transaksi dari File:\n");
+    while (fgets(line, sizeof(line), file)) {
+        printf("%s", line);
+    }
+
+    fclose(file);
+}
 
 int main() {
     Queue* front = NULL;
@@ -223,7 +309,9 @@ int main() {
         printf("4. Tambah Antrian\n");
         printf("5. Tampilkan Antrian\n");
         printf("6. Proses Antrian\n");
-        printf("7. Keluar\n");
+        printf("7. Tampilkan Kursi\n");
+        printf("8. Hapus Penonton\n");
+        printf("9. Keluar\n");
         printf("Pilih: ");
         scanf("%d", &choice);
         getchar();
@@ -273,6 +361,12 @@ int main() {
                 getchar();
                 break;
             case 7:
+                displaySeats(seats);
+                break;
+            case 8:
+                removeSeat(seats);
+                break;
+            case 9:
                 resetQueue(&front, &rear, &queueCount);
                 printf("Keluar dari program.\n");
                 exit(0);
